@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[7]:
+
+
+from mrjob.job import MRJob
+import re
+
+WORD_RE = re.compile(r"[\w']+")
+class MRUniqueWordCount(MRJob):
+
+    def mapper(self, _, line):
+        for word in WORD_RE.findall(line):
+            yield word.lower(), 1
+
+    def reducer(self, word, counts):
+        yield word, sum(counts)
+
+if _name_ == '_main_':
+    MRUniqueWordCount.run()
+
